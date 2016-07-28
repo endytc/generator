@@ -1,0 +1,20 @@
+{
+    "name":    "nvd/crud-generator",
+    "version": "1.0.5",
+    "type":    "library",
+    "license": "MIT",
+    "description": "CRUD generator for Laravel",
+    "authors": [
+        {
+            "name": "Naveed ul Hassan",
+            "email": "08es34@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9"
+    },
+    "autoload": {
+        "psr-4": {"Nvd\\Crud\\": ["src"]}
+    },
+    "require-dev": {}
+}
