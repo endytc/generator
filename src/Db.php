@@ -13,6 +13,7 @@ class Db
     public static function fields($table)
     {
         $columns = \DB::select('show fields from '.$table);
+        
         $tableFields = array(); // return value
         foreach ($columns as $column) {
             $column = (array)$column;
