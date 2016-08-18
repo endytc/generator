@@ -1,9 +1,9 @@
 <?php
 
-namespace Nvd\Crud\Providers;
+namespace App\Generator\src\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Nvd\Crud\Commands\Crud;
+use App\Generator\src\Commands\Crud;
 
 class NvdCrudServiceProvider extends ServiceProvider
 {

@@ -1,5 +1,5 @@
 <?php
-/* @var $gen \Nvd\Crud\Commands\Crud */
+/* @var $gen \App\Generator\src\Commands\Crud */
 /* @var $fields [] */
 ?>
 
@@ -15,7 +15,7 @@
 
         {{ method_field("PUT") }}
 <?php foreach ( $fields as $field )  { ?>
-<?php if( $str = \Nvd\Crud\Db::getFormInputMarkup( $field, $gen->modelVariableName() ) ) { ?>
+<?php if( $str = \App\Generator\src\Db::getFormInputMarkup( $field, $gen->modelVariableName() ) ) { ?>
 
         <?=$str?>
 

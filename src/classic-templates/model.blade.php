@@ -1,5 +1,5 @@
 <?php
-/* @var $gen \Nvd\Crud\Commands\Crud */
+/* @var $gen \App\Generator\src\Commands\Crud */
 /* @var $fields [] */
 ?>
 <?='<?php'?>
@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 class <?=$gen->modelClassName()?> extends Model {
 
     public $guarded = ["id","created_at","updated_at"];
+    protected $table="<?=$gen->tableName?>";
+    public $primaryKey = 'id';
+    public $incrementing = true;
 
     public static function findRequested()
     {
@@ -18,7 +21,7 @@ class <?=$gen->modelClassName()?> extends Model {
 
         // search results based on user input
         @foreach ( $fields as $field )
-\Request::input('{{$field->name}}') and $query->where({!! \Nvd\Crud\Db::getConditionStr($field) !!});
+\Request::input('{{$field->name}}') and $query->where({!! \App\Generator\src\Db::getConditionStr($field) !!});
         @endforeach
 
         // sort results
@@ -32,7 +35,7 @@ class <?=$gen->modelClassName()?> extends Model {
     {
         $rules = [
 @foreach ( $fields as $field )
-@if( $rule = \Nvd\Crud\Db::getValidationRule( $field ) )
+@if( $rule = \App\Generator\src\Db::getValidationRule( $field ) )
             {!! $rule !!}
 @endif
 @endforeach

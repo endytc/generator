@@ -4,12 +4,12 @@
  * Date: 1/21/16
  * Time: 3:08 PM
  */
-namespace Nvd\Crud;
+namespace App\Generator\src;
 use Illuminate\Support\MessageBag;
 
 /**
  * Class Form
- * @package Nvd\Crud
+ * @package App\Generator\src
  *
  * @property $name;
  * @property $value;
@@ -33,9 +33,14 @@ class Form
     protected $options; // only for select element
     protected $useOptionKeysForValues; // only for select element
 
-    public static function input( $name, $type = 'text' )
+    public static function input( $name, $type = 'text',$attributesOptions=[] )
     {
-        $elem = static::createElement($name,'input');
+        if(!empty($attributesOptions['class'])){
+            $attributesOptions['class'].=" form-control";
+        }else{
+            $attributesOptions['class']="form-control";
+        }
+        $elem = static::createElement($name,'input',$attributesOptions);
         $elem->attributes['type'] = $type;
         return $elem;
     }
@@ -67,7 +72,7 @@ class Form
         return $this->attributes;
     }
 
-    public function show()
+    public function show($options=[])
     {
         $this->setValue();
 
@@ -75,8 +80,9 @@ class Form
         $hasError = ($errors and $errors->has($this->name)) ? " has-error" : "";
 
         $output = '<div class="form-group'.$hasError.'">';
-        $output .= $this->label? "<label for='{$this->name}'>{$this->label}" : "";
+        $output .= $this->label? "<label for='{$this->name}' class='control-label ".array_get($options,'class-label','col-sm-4')."''>".array_get($options,'label',$this->label) : "";
         $output .= $this->label? "</label>" : "";
+        $output .= "<div class='".array_get($options,'class-input','col-sm-8')."'>";
         $output .= call_user_func([$this, "show".ucfirst($this->type)]);
 
         if ( $this->helpBlock and $errors and $errors->has($this->name) )
@@ -86,6 +92,7 @@ class Form
             $output .= '</span>';
         }
 
+        $output .= "</div>";
         $output .= "</div>";
         return $output;
     }
@@ -109,13 +116,16 @@ class Form
         return $output;
     }
 
-    protected static function createElement( $name, $type )
+    protected static function createElement( $name, $type,$attributesOptions=[] )
     {
         $elem = new self;
         $elem->type = $type;
         $elem->name = $name;
         $elem->attributes['id'] = $name;
         $elem->attributes['class'] = 'form-control';
+        foreach ($attributesOptions as $key => $value) {
+            $elem->attributes[$key]=$value;
+        }
         $elem->label = ucwords( str_replace( "_"," ", $name ) );
         return $elem;
     }
@@ -160,5 +170,12 @@ class Form
     {
         return $this->{"_".$property};
     }
-
+    public static function label($options=[]){
+        $output = '<div class="form-group">';
+        $output .= $this->label? "<label for='{$this->name}' class=".array_get($options,'class-label','col-sm-4').">".array_get($options,'label',$this->label) : "";
+        $output .= $this->label? "</label>" : "";
+        $output .= "<div class='".array_get($options,'class-input','col-sm-8')."'>s.d</div>";
+        $output .= "</div>";
+        return $output;
+    }   
 }

@@ -1,5 +1,5 @@
 <?php
-/* @var $gen \Nvd\Crud\Commands\Crud */
+/* @var $gen \App\Generator\src\Commands\Crud */
 ?>
 <?='<?php'?>
 

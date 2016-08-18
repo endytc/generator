@@ -1,5 +1,5 @@
 <?php
-namespace Nvd\Crud;
+namespace App\Generator\src;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;

@@ -1,5 +1,5 @@
 <?php
-/* @var $gen \Nvd\Crud\Commands\Crud */
+/* @var $gen \App\Generator\src\Commands\Crud */
 /* @var $fields [] */
 ?>
 <div class="panel-group col-md-6 col-sm-12" id="accordion" style="padding-left: 0">
@@ -19,7 +19,7 @@
 
                     {{ csrf_field() }}
 <?php foreach ( $fields as $field )  { ?>
-<?php if( $str = \Nvd\Crud\Db::getFormInputMarkup($field) ) { ?>
+<?php if( $str = \App\Generator\src\Db::getFormInputMarkup($field) ) { ?>
 
                     <?=$str?>
 

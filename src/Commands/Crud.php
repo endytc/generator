@@ -1,20 +1,25 @@
 <?php
 
-namespace Nvd\Crud\Commands;
+namespace App\Generator\src\Commands;
 
 use Illuminate\Console\Command;
-use Nvd\Crud\Db;
+use App\Generator\src\Db;
+use App\Generator\src\Table;
 
 class Crud extends Command
 {
     public $tableName;
+    public $table;
+    public $export;
+    public $fields;
+    public $fieldsArr;
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'nvd:crud
+    protected $signature = 'fa:crud
         {tableName : The name of the table you want to generate crud for.}';
 
     /**
@@ -40,8 +45,23 @@ class Crud extends Command
     public function handle()
     {
         $this->tableName = $this->argument('tableName');
+        $this->fields=Db::fields($this->tableName);
+        $this->table=new Table();
+        $this->table->fields=$this->fields;
+        $this->table->name=$this->tableName;
+        // dd($this->table);
+        $this->fieldsArr=[];
+        foreach ($this->fields as $key => $value) {
+            $this->fieldsArr[]=$value->name;
+        }
+        // dd($fieldsArr);
+        $this->authAttr = str_replace('_', '-', $this->tableName);
+        if($this->confirm('Generate export? [y|N]')){
+            $this->export=true;
+        }else
+            $this->export=false;
         $this->generateModel();
-        $this->generateRouteModelBinding();
+        // $this->generateRouteModelBinding();
         $this->generateRoute();
         $this->generateController();
         $this->generateViews();
@@ -49,7 +69,7 @@ class Crud extends Command
 
     public function generateRouteModelBinding()
     {
-        $declaration = "\$router->model('".$this->route()."', 'App\\".$this->modelClassName()."');";
+        $declaration = "\$router->model('".$this->route()."', 'App\Models\\".$this->modelClassName()."');";
         $providerFile = app_path('Providers/RouteServiceProvider.php');
         $fileContent = file_get_contents($providerFile);
 
@@ -79,7 +99,12 @@ class Crud extends Command
 
     public function generateRoute()
     {
-        $route = "Route::resource('{$this->route()}','{$this->controllerClassName()}');";
+        $route  = "Route::get('{$this->route()}/load-data','{$this->controllerClassName()}@loadData');\n";
+        if($this->export){
+            $route  .= "Route::post('{$this->route()}/export-data','{$this->controllerClassName()}@postExportData');\n";
+        }
+        $route .= "Route::resource('{$this->route()}','{$this->controllerClassName()}');\n";
+        $route .= "Route::delete('{$this->route()}/{id}/restore','{$this->controllerClassName()}@restore');\n";
         $routesFile = app_path('Http/routes.php');
         $routesFileContent = file_get_contents($routesFile);
 
@@ -119,7 +144,13 @@ class Crud extends Command
 
         if($this->confirmOverwrite($controllerFile))
         {
-            $content = view($this->templatesDir().'.controller',['gen' => $this]);
+            // dd($this->export);
+            $content = view($this->templatesDir().'.controller',['gen' => $this,
+                'fields' => $this->fields,
+                'fieldsArr' => $this->fieldsArr,
+                'table'=>$this->table,
+                'export'=>$this->export,
+                ]);
             file_put_contents($controllerFile, $content);
             $this->info( $this->controllerClassName()." generated successfully." );
         }
@@ -127,13 +158,15 @@ class Crud extends Command
 
     public function generateModel()
     {
-        $modelFile = $this->modelsDir().'/'.$this->modelClassName().".php";
+        $modelFile = $this->modelsDir().'/Models/'.$this->modelClassName().".php";
 
         if($this->confirmOverwrite($modelFile))
         {
             $content = view( $this->templatesDir().'.model', [
                 'gen' => $this,
-                'fields' => Db::fields($this->tableName)
+                'fields' => $this->fields,
+                'fieldsArr' => $this->fieldsArr,
+                'table'=>$this->table
             ]);
             file_put_contents($modelFile, $content);
             $this->info( "Model class ".$this->modelClassName()." generated successfully." );
@@ -149,7 +182,10 @@ class Crud extends Command
             {
                 $content = view( $this->templatesDir().'.views.'.$view, [
                     'gen' => $this,
-                    'fields' => Db::fields($this->tableName)
+                    'fields' => $this->fields,
+                    'fieldsArr' => $this->fieldsArr,
+                    'export'=>$this->export,
+                    'table'=>$this->table
                 ]);
                 // dd($content);
                 file_put_contents($viewFile, $content);
@@ -178,12 +214,13 @@ class Crud extends Command
 
     public function route()
     {
-        return str_slug(str_replace("_"," ", str_singular($this->tableName)));
+        return str_slug(str_replace("_"," ", ($this->tableName)));
     }
 
     public function controllerClassName()
     {
-        return studly_case(str_singular($this->tableName))."Controller";
+        // $this->error(("fendi_tes"));
+        return studly_case(($this->tableName))."Controller";
     }
 
     public function viewsDir()
@@ -193,7 +230,7 @@ class Crud extends Command
 
     public function viewsDirName()
     {
-        return str_singular($this->tableName);
+        return ($this->tableName);
     }
 
     public function controllersDir()
@@ -208,17 +245,17 @@ class Crud extends Command
 
     public function modelClassName()
     {
-        return studly_case(str_singular($this->tableName));
+        return studly_case(($this->tableName));
     }
 
     public function modelVariableName()
     {
-        return camel_case(str_singular($this->tableName));
+        return camel_case(($this->tableName));
     }
 
     public function titleSingular()
     {
-        return ucwords(str_singular(str_replace("_", " ", $this->tableName)));
+        return ucwords((str_replace("_", " ", $this->tableName)));
     }
 
     public function titlePlural()

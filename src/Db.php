@@ -5,7 +5,7 @@
  * Time: 2:55 PM
  */
 
-namespace Nvd\Crud;
+namespace App\Generator\src;
 
 
 class Db
@@ -17,7 +17,7 @@ class Db
         $tableFields = array(); // return value
         foreach ($columns as $column) {
             $column = (array)$column;
-            $field = new \stdClass();
+            $field = new Column();
             $field->name = $column['Field'];
             $field->defValue = $column['Default'];
             $field->required = $column['Null'] == 'NO';
@@ -84,9 +84,9 @@ class Db
         return "'".$field->name."' => '".join( "|", $rules )."',";
     }
 
-    protected static function skippedFields()
+    public static function skippedFields()
     {
-        return ['id','created_at','updated_at'];
+        return ['id','created_at','updated_at','deleted_at'];
     }
 
     public static function isGuarded($fieldName)
@@ -99,7 +99,7 @@ class Db
         // selects
         if ( $field->type == 'enum' )
         {
-            $output = "{!!\Nvd\Crud\Html::selectRequested(\n";
+            $output = "{!!\App\Generator\src\Html::selectRequested(\n";
             $output .= "\t\t\t\t\t'".$field->name."',\n";
             $output .= "\t\t\t\t\t[ '', '".join("', '",$field->enumValues)."' ],\n"; //Yes', 'No
             $output .= "\t\t\t\t\t['class'=>'form-control']\n";
@@ -127,18 +127,18 @@ class Db
         // selects
         if ( $field->type == 'enum' )
         {
-            return "{!! \Nvd\Crud\Form::select( '{$field->name}', [ '".join("', '",$field->enumValues)."' ] ){$modelStr}->show() !!}";
+            return "{!! \App\Generator\src\Form::select( '{$field->name}', [ '".join("', '",$field->enumValues)."' ] ){$modelStr}->show() !!}";
         }
 
         if ( $field->type == 'text' )
         {
-            return "{!! \Nvd\Crud\Form::textarea( '{$field->name}' ){$modelStr}->show() !!}";
+            return "{!! \App\Generator\src\Form::textarea( '{$field->name}' ){$modelStr}->show() !!}";
         }
 
         // input type:
         $type = 'text';
         if ( $field->type == 'date' ) $type = $field->type;
-        return "{!! \Nvd\Crud\Form::input('{$field->name}','{$type}'){$modelStr}->show() !!}";
+        return "{!! \App\Generator\src\Form::input('{$field->name}','{$type}'){$modelStr}->show() !!}";
     }
 
 }

@@ -1,5 +1,5 @@
 <?php
-/* @var $gen \Nvd\Crud\Commands\Crud */
+/* @var $gen \App\Generator\src\Commands\Crud */
 /* @var $fields [] */
 ?>
 
@@ -13,7 +13,7 @@
 
         {{ csrf_field() }}
 <?php foreach ( $fields as $field )  { ?>
-<?php if( $str = \Nvd\Crud\Db::getFormInputMarkup($field) ) { ?>
+<?php if( $str = \App\Generator\src\Db::getFormInputMarkup($field) ) { ?>
 
         <?=$str?>
 

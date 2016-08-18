@@ -40,7 +40,7 @@ CRUD generator for Laravel 5.x
     'providers' => [
         ...
         ...
-        Nvd\Crud\Providers\NvdCrudServiceProvider::class,
+        App\Generator\src\Providers\NvdCrudServiceProvider::class,
     ],
     ```
     

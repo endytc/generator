@@ -1,5 +1,5 @@
 <?php
-/* @var $gen \Nvd\Crud\Commands\Crud */
+/* @var $gen \App\Generator\src\Commands\Crud */
 /* @var $fields [] */
 ?>
 
@@ -16,14 +16,14 @@
 	    <thead>
 		<tr class="header-row">
 			<?php foreach ( $fields as $field )  { ?>
-{!!\Nvd\Crud\Html::sortableTh('<?=$field->name?>','<?= $gen->route() ?>.index','<?=ucwords(str_replace('_',' ',$field->name))?>')!!}
+{!!\App\Generator\src\Html::sortableTh('<?=$field->name?>','<?= $gen->route() ?>.index','<?=ucwords(str_replace('_',' ',$field->name))?>')!!}
 			<?php } ?>
 <th></th>
 		</tr>
 		<tr class="search-row">
 			<form class="search-form">
 				<?php foreach ( $fields as $field )  { ?>
-<td><?=\Nvd\Crud\Db::getSearchInputStr($field)?></td>
+<td><?=\App\Generator\src\Db::getSearchInputStr($field)?></td>
 				<?php } ?>
 <td style="min-width: 6.1em;">@include('<?=$gen->templatesDir()?>.common.search-btn')</td>
 			</form>
