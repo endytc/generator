@@ -9,16 +9,19 @@ $config = [
      * */
     'views' => [
         'index',
-        'edit',
-        'show',
-        'create',
+        // 'show',
+        'form',
+        // 'create',
+        // 'edit',
     ],
 
     /*
      * Directory containing the templates
      * If you want to use your custom templates, specify them here
      * */
-    'templates' => 'vendor.crud.single-page-templates',
+    'templates' => 'vendor.metronic-templates',
+    // 'templates' => 'vendor.crudOry',
+    // 'templates' => 'app.Generator.src.single-page-templates',
 
 ];
 

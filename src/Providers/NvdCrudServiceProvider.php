@@ -14,9 +14,11 @@ class NvdCrudServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // echo "tes";
         $this->commands([Crud::class]);
         $this->publishes([
             __DIR__.'/../Config/config.php' => config_path('crud.php'),
+            __DIR__.'/../metronic-templates' => base_path('resources/views/vendor/crud/metronic-templates'),
             __DIR__.'/../classic-templates' => base_path('resources/views/vendor/crud/classic-templates'),
             __DIR__.'/../single-page-templates' => base_path('resources/views/vendor/crud/single-page-templates'),
         ],'nvd');
