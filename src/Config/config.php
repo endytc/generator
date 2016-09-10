@@ -19,7 +19,7 @@ $config = [
      * Directory containing the templates
      * If you want to use your custom templates, specify them here
      * */
-    'templates' => 'vendor.metronic-templates',
+    'templates' => 'vendor.crud.metronic-templates',
     // 'templates' => 'vendor.crudOry',
     // 'templates' => 'app.Generator.src.single-page-templates',
 
