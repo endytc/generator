@@ -53,9 +53,9 @@ class Form
         return $elem;
     }
 
-    public static function textarea($name)
+    public static function textarea($name,$attributesOptions=[])
     {
-        return static::createElement($name,"textarea");
+        return static::createElement($name,"textarea",$attributesOptions);
     }
 
     public function attributes($value = null)
