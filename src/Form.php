@@ -25,6 +25,7 @@ class Form
 {
     protected $_name;
     protected $_value;
+    protected $customValue;
     protected $attributes = [];
     protected $label;
     protected $helpBlock = true; // show help block or not
@@ -45,17 +46,20 @@ class Form
         return $elem;
     }
 
-    public static function select( $name, $options, $useOptionKeysForValues = false )
+    public static function select( $name, $options, $value = '' )
     {
         $elem = static::createElement($name,"select");
+        // dd($useOptionKeysForValues);
         $elem->options = $options;
-        $elem->useOptionKeysForValues = $useOptionKeysForValues;
+        if($value!='')
+            $elem->customValue=$value;
+        $elem->useOptionKeysForValues = true;
         return $elem;
     }
 
-    public static function textarea($name)
+    public static function textarea($name,$attributesOptions=[])
     {
-        return static::createElement($name,"textarea");
+        return static::createElement($name,"textarea",$attributesOptions);
     }
 
     public function attributes($value = null)
@@ -105,7 +109,9 @@ class Form
 
     protected function showSelect()
     {
-        return Html::select( $this->name, $this->options, $this->attributes, $this->useOptionKeysForValues );
+        if($this->customValue)
+            $this->_value=$this->customValue;
+        return Html::select( $this->name, $this->options, $this->attributes, $this->_value, $this->useOptionKeysForValues );
     }
 
     protected function showTextarea()
@@ -129,7 +135,10 @@ class Form
         $elem->label = ucwords( str_replace( "_"," ", $name ) );
         return $elem;
     }
-
+    public function required(){
+        $this->required=true;
+        return $this;
+    }
     protected function setValue()
     {
         $this->value = old($this->name);

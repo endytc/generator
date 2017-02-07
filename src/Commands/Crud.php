@@ -99,12 +99,12 @@ class Crud extends Command
 
     public function generateRoute()
     {
-        $route  = "Route::get('{$this->route()}/load-data','{$this->controllerClassName()}@loadData');\n";
+        $route  = "Route::get('{$this->route()}/load-data','Admin/{$this->controllerClassName()}@loadData');\n";
         if($this->export){
-            $route  .= "Route::post('{$this->route()}/export-data','{$this->controllerClassName()}@postExportData');\n";
+            $route  .= "Route::post('{$this->route()}/export-data','Admin/{$this->controllerClassName()}@postExportData');\n";
         }
-        $route .= "Route::resource('{$this->route()}','{$this->controllerClassName()}');\n";
-        $route .= "Route::delete('{$this->route()}/{id}/restore','{$this->controllerClassName()}@restore');\n";
+        $route .= "Route::resource('{$this->route()}','Admin/{$this->controllerClassName()}');\n";
+        $route .= "Route::delete('{$this->route()}/{id}/restore','Admin/{$this->controllerClassName()}@restore');\n";
         $routesFile = app_path('Http/routes.php');
         $routesFileContent = file_get_contents($routesFile);
 
@@ -235,7 +235,7 @@ class Crud extends Command
 
     public function controllersDir()
     {
-        return app_path('Http/Controllers');
+        return app_path('Http/Controllers/Admin');
     }
 
     public function modelsDir()
